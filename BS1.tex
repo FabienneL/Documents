@@ -52,8 +52,10 @@
 			\item Client-Socket wieder schließen
 		\end{enumerate}
 
+\newpage
+
 	\subsection{Dateizugriff}
-		In unserm Projekt nutzen wir das CSV-Dateiformat um die Datensätze von Studenten auf eine praktische Art und Weise speichern und auslesen zu können. Um die Studenten ihrer zugehörigen Gruppen zuzuordnen, werden diese in Verzeichnissen abgelegt.\\
+		In unserm Projekt nutzen wir das CSV-Dateiformat um die Datensätze von Studenten auf eine praktische Art und Weise speichern und auslesen zu können. Um die Studenten ihrer zugehörigen Gruppen (Studiengängen) zuzuordnen, werden diese in Verzeichnissen abgelegt. \\
 		Diese Verzeichnisse werden anhand ihrer Bennenungen unterschieden, z.B.: steht der Ordner ITTI für die Studenten, die der Informationstechnik / Technische Informatik angehören.\\
 		Generell werden Studenten in einer Datei gespeichert, die als Bezeichnung die zughörige Matrikelnummer besitzt. Innerhalb der Datei befinden sich die folgenden Datensätze, durch Simikolons von einander getrennt:\\
 		\begin{itemize}
@@ -71,10 +73,14 @@
 		 \\
 		Innerhalb des Programmes werden, bis auf die Noten, die Datensätze als Char-Arrays gespeichert. Wichtig ist es darauf zu achten, dass an letzter Stelle das Terminationszeichen ist. Das Passwort darf aus maximal 10 Zeichen bestehen. Für Vorname, Nachname und der zugehörige Studiengang sind 20+1 Char zur Verwendung unterstützt. Die Matrikelnummer besitzt 9 Stellen. Diese wird folglich in 9+1 Chars vom Client abgefragt. Ähnlich bei dem Geburtstag der in der Form DD.MM.YYYY in 11 Chars gespeichert wird. \\
 		Sowohl die einzelnen Noten, als auch die berechneten Durschnitte sind vom Datentyp Double. In die Datei werden die Noten als Chars der Länge 4 eingetragen, sodass sie immer die folgende Form besitzen X.Y wobei 1<X<5 und Y$\in \{$0,3,7$\}$ ist.\\
+		
+
+\newpage
+		
 		\subsubsection{Beipieldatein}
 			Da zu Laufzeiten des Programms sowohl Gruppen als auch Studenten mit einer beliebigen Anzahl an Noten hinzugefügt werden, decken unsere Beispieldatein den geforderten Teil ab:
 			
-			\textbf{Gruppen:}
+			\textbf{Studiengänge:}
 			\begin{itemize}
 				\item Informatik
 				\item ITTI
@@ -107,12 +113,14 @@
 		Dem Nutzer werden diese Möglichkeiten nach dem Login in einer Menüform zur Auswahl gestellt. Die Auswahl eines Menüpunktes erfragt auf Client-Seite, wenn nötig, Eingaben bzw. gibt die gewünschten Ergebnisse zurück.
 		\subsubsection{Administrator}
 			\begin{description}
-				\item[Studenten anlegen] Der Administrator muss bei dem Erstellen eines neuen Studenten dessen Vorname, Nachname, Matrikelnummer, Studiengang und Geburtstag angeben. Durch diese Eingabe wird eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt.
-				\item[Student finden] Um die Daten eines Studenten einzusehen, werden Kentniss über seinen Studiengang und sine Matrikelnummer vorrausgesetzt. Zusätzlich wird auch dessen Durschnitt angezeigt.
+				\item[Student anlegen] Der Administrator muss bei dem Erstellen eines neuen Studenten dessen Vorname, Nachname, Geburtstag, Studiengang und Passwort angeben. Durch diese Eingabe wird eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt. Die Matrikelnummer wird einer Datei entnommen, die im Anschluss inkrementiert wird, um sicherzustellen, dass Matrikelnummern eindeutig bleiben.
+				\item[Student finden] Um die Daten eines Studenten einzusehen, wird Kentniss über seine Matrikelnummer vorrausgesetzt. Zusätzlich zu Matrikelnummer, Passwort, Vorname, Nachname, Studiengang, Geburtstag und aller Noten wird auch dessen Durschnitt angezeigt.
+				\item[Student editieren] Für die Editierung eines Studenten muss dessen Matrikelnummer angegeben werden. Danach ist es möglich sein Passwort oder eine Note gezielt zu ändern. 
 				\item[Studiengang anlegen] Durch diese Funktion wird ein neues Verzeichnis erstellt, in das später Studenten eingefügt werden können.
-				\item[Studiengang Mitglieder anzeigen] Nach der Eingabe des Studiengangs als Gruppennamen, werden alle Studenten aus diesem ausgegeben.
-				\item[Note hinzufügen] Damit einem Studenten eine Note hinzugefügt werden kann müssen Studiengang, Matrikelnummer und die hinzuzufügende Note als Eingabe angegeben werden.
-				\item[Studiengangsbesten ermitteln] Für die ausgewählte Gruppe wird der beste Student anhand der einzelnen Durchschnitte ermittelt.
+				\item[Studiengangsmitglieder anzeigen] Nach der Eingabe des Studiengangs als Gruppennamen, werden alle Studenten aus diesem ausgegeben.
+				\item[Studiengänge anzeigen] Es werden alle vorhandenen Studiengänge ermittelt und ausgegeben.
+				\item[Note hinzufügen] Damit einem Studenten eine Note hinzugefügt werden kann müssen Matrikelnummer und die hinzuzufügende Note als Eingabe angegeben werden.
+				\item[Studiengangsbesten ermitteln] Für den ausgewählten Studiengang wird der beste Student anhand der einzelnen Durchschnitte ermittelt.
 				\item[Gesamtbesten ermitteln] Von allen Studenten, die gespeichert sind, wird der, mit dem besten Durchschnitt, ausgegeben.
 				\item[Beenden] Beendet die Kommunikation mit dem Server und schließt das Programm auf Seite des Clients.
 			\end{description}
@@ -128,6 +136,10 @@
 		Capabilities funktionieren analog zu dem Prinzip von ACL. Jedoch wird bei der Ausführung des Programmes überprüft auf welche Dateien das System zugreifen kann.
 		\subsubsection{Eigene Implementierung}
 		Unsere Implementierung des Sicherheitsmechanismus orientiert sich an der ACL. Unser System unterscheidet 2 Benutzergruppen Student und Admin. Der Admin hat die Möglichkeit neue Studenten(Dateien), Studiengänge usw. wie vorher beschrieben anzulegen und diese auch zu bearbeiten. Den Studenten ist diese Funktion verborgen und ist nur in der Lage die eigenen Daten abzufragen. Die Unterscheidung der Benutzergruppen geschieht beim Login in das System. Der Server reagiert nach einen erfolgreichen Login das er bereit ist Befehle entgegen zu nehmen. Je nach Benutzergruppe ist es möglich den Server entsprechende Befehle zu signalisieren worauf hin der Server mit der Bearbeitung beginnt d.h. die Unterscheidung findet nur im Client statt und die auszuführende Befehle werden durch Nachrichten von dem Server unterschieden.
+		
+
+\newpage
+		
 \section{Praktische Umsetzung}
 	\subsection{Menü}
 		Die in Kapitel 2.4 Beschriebenen Funktionalitäten führen zu zwei unterschiedlichen Menü-Formen. Abhängig von den Rechten, die dem Nutzer nach dem Login zugeteilt werden, wird ein entsprechendes Menü angezeigt. \\
@@ -138,11 +150,11 @@
 
 		\textbf{Administrator-Ansicht:}\\
 
-		\includegraphics[scale=0.6]{Admin.jpg}\\
+		\includegraphics[scale=1]{admin.png}\\
 
 		\textbf{Studenten-Ansicht:}\\
 
-		\includegraphics[scale=0.6]{Student.jpg}\\
+		\includegraphics[scale=1]{student.png}\\
 	\subsection{Client}
 		Der Client bietet dem Nutzer die Möglichkeit anhand eines Menüs Funktionen auszuwählen. Bei Auswahl werden gegebenenfalls Daten vom Nutzer angefordert und eine Mitteilung über das Ergebnis gegeben. Die Eingaben des Nutzers werden bis zu einem gewissen Grad validiert. Beispielsweise wird verhindert, dass bei der Eingabe Simikolons versendet werden können, da zusätzliche in CSV-Datein und deren Auswertung zu Fehlern führen werden.\\
 		In unserem Programm ist es die Hauptaufgabe des Clients eine Schnittstelle zwischen Nutzer und Server darzustellen.
@@ -172,26 +184,30 @@
 	\subsection{Client}
 		Bei Nutzung des Clients im Terminal 2 führt das Programm den Nutzer durch eine intutive Menüführung. Zurück zu dem Hauptmenü kann der Nutzer jeder Zeit durch die Eingabe einer 0 gelangen.
 		\subsubsection{Login}
-			Nach Starten des Servers werden der Nutzername und das zugehörige Passwort abgefragt. Authentifizieren tuen sich die Studenten durch ihre Matrikelnummer und das zugehörige Passwort. 
-			Die Administratoren besitzten den Nutzernamen $\glqq$Admin$\grqq$ und das Passwort $\glqq$123$\grqq$.
+			Nach Starten des Servers werden der Nutzername und das zugehörige Passwort abgefragt. Authentifiziert werden die Studenten durch ihre Matrikelnummer und das zugehörige Passwort. \\
+			Die Administratoren besitzten den Nutzernamen $\glqq$admin$\grqq$ und das Passwort $\glqq$123$\grqq$.
 		\subsubsection{Studenten anlegen}
-			Einen neuen Studen anlegen ist nur für Administratoren möglich. Dieser wird aufgefordert stückchenweise dei Stammdaten des Studenten einzugeben: Vorname, Nachname, Matrikelnummer, Studiengang und Geburtstag.\\
+			Einen neuen Studen anlegen ist nur für Administratoren möglich. Dieser wird aufgefordert stückchenweise dei Stammdaten des Studenten einzugeben: Vorname, Nachname, Geburtstag, Studiengang und Passwort.\\
 			Hierbei wird der Ersteller auf die maximale Länge der Eingabe hingewiesen. Nachdem alle Daten eingeben wurden müssen die Daten noch mit einer $\glqq$1$\grqq$ bestätigt werden. Hiernach wird durch diese Eingabe  eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt.
-		\subsubsection{Studiengang anlegen}
-			Hier wird dem Administrator die Möglichkeit gegeben, bei Bedarf, einen neuen Studiengang hinzuzufügen. Auch hier wird ein Name mit der maximalen Länge von 20 Zeichen angefordert, sodass, nach der Bestätigung, ein neues Verzeichnis mit diesem Namen erstellt wird.
 		\subsubsection{Student finden / Daten anzeigen}
 			Je nachdem wer diese Funktion aufruft ereignen sich unterschiedliche Interaktionen. \\
-			Wenn jemand mit Administrator-Rechten sich Studentendaten anzeigen lassen möchte, wird er gefragt welchem Studiengang der Student angehört und welche Matrikelnummer dieser besitzt.\\
-			Handelt es sich um einen Studenten, ist keine Angabe seiner Matrikelnummer nötig. Es werden gleich seine Daten ausgegeben.\\
+			Wenn jemand mit Administrator-Rechten sich Studentendaten anzeigen lassen möchte, wird er gefragt welche Matrikelnummer dieser besitzt.\\
+			Handelt es sich um einen Studenten, der seine eigenen Daten angezeigt haben möchte, ist keine Angabe seiner Matrikelnummer nötig. Es werden gleich seine Daten ausgegeben.\\
 			In beiden Fällen werden alle Daten und der zugehörige, bei Anfrage berechnete, Durchschnitt ausgegeben.
-		\subsubsection{Studiengang Mitglieder anzeigen}
-			Diese Funktion ist für Administratoren dahin gehend interessant, da sie für eine Gruppe alle Studenten ausgiebt, die sich in ihr befinden. Dazu ist es nötig den Namen des Studiengangs anzugeben.
+		\subsubsection{Student editieren}
+			Innerhalb dieser Funktion kann der Administrator gezielt Daten des Studenten ändern. Zuerst muss die Matrikelnummer eingegeben werden. Bei einer ungültigen wird das Auswahlmenü angezeigt. War die Matrikelnummer gültig, ist es nun möglich das Passwort zu ändern oder eine Note des Studenten. Bei der Editierung einer Note werden zuerst alle Noten nummeriert ausgegeben. Der Administrator kann dann die Nummer der zu ändernden Note eingeben und darauf hin den neuen Wert. 
+		\subsubsection{Studiengang anlegen}
+			Hier wird dem Administrator die Möglichkeit gegeben, einen neuen Studiengang hinzuzufügen. Auch hier wird ein Name mit der maximalen Länge von 20 Zeichen angefordert, sodass, nach der Bestätigung, ein neues Verzeichnis mit diesem Namen erstellt wird.
+		\subsubsection{Studiengangsmitglieder anzeigen}
+			Diese Funktion ist für Administratoren dahin gehend interessant, als dass sie für einen Studiengang alle Studenten ausgiebt, die sich in ihm befinden. Dazu ist es nötig den Namen des Studiengangs anzugeben.
+		\subsubsection{Studiengänge anzeigen}
+			Auch diese Funktionalität ist nur dafür da, um dem Administrator eine Übersicht über die vorhandenen Studiengänge zu geben. 
 		\subsubsection{Note hinzufügen}
-			Für ein Software-Projekt, wie dieses, ist es sinnvoll, dass Studenten weitere Noten hinzugefügt werden können. Damit nicht jeder Student sich selbst Noten geben kann, ist dies nur vom Administrator aus möglich. Hierfür müssen wieder Studiengang und Matrikelnummer des Studenten angegeben werden. Dazu kommt naheliegender Weise auch die Note die dem Studenten zugedacht ist. Nach einer Bestätigung wird nun in der Studentendatei hinten die Note angefügt.
+			Für ein Software-Projekt, wie dieses, ist es sinnvoll, dass Studenten weitere Noten hinzugefügt werden können. Damit nicht jeder Student sich selbst Noten geben kann, ist dies nur vom Administrator aus möglich. Hierfür muss die Matrikelnummer des Studenten angegeben werden. Dazu kommt naheliegender Weise auch die Note die dem Studenten zugedacht ist. Nach einer Bestätigung wird nun in der Studentendatei hinten die Note angefügt.
 		\subsubsection{Studiengangsbesten anzeigen}
 			Diese Funktionalität ist ebenfalls den Administratoren vorbehalten. Es wird aus jedem Studiengang der Beste ermittelt. Dafür werden von allen Studenten die Durchschnitte gebildet und miteinander verglichen. Studenten wird nicht die Möglichkeit gegeben ihren Durchschnitt mit anderen zu vergleich. Diese Funktion bleibt Administratoren vorbehalten.
 		\subsubsection{Gesamtbesten anzeigen}
-			Ähnlich wie bei dem Gruppenbesten werden auch hier Studenten verglichen. Um den Gesamtbesten zu ermitteln werden die Gruppenbesten anhand ihrer Durchschnitte verglichen. Nur Administratoren können den Besten ermitteln.
+			Ähnlich wie bei dem Studiengangsbesten werden auch hier Studenten verglichen. Um den Gesamtbesten zu ermitteln werden die Studiengangsbesten anhand ihrer Durchschnitte verglichen. Nur Administratoren können den Besten ermitteln.
 		\subsubsection{Beenden}
 			Beendet die Kommunikation zwischen Client und Server. 
 \end{document}
