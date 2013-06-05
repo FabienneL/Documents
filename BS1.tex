@@ -6,7 +6,7 @@
 \usepackage{graphicx}
  
 \title{Praktikum Betriebssysteme: Projekt 1\\ Client/Server Stream Socket Programmierung}
-\author{Andreas Ruscheinski\thanks{Matr.-nr.: 211203494}\and Christian Delfs\thanks{Matr.-nr.: 211204103}\and Fabienne Lambusch\thanks{Matr.-nr.: ?????????}}
+\author{Andreas Ruscheinski\thanks{Matr.-nr.: 211203494}\and Christian Delfs\thanks{Matr.-nr.: 211204103}\and Fabienne Lambusch\thanks{Matr.-nr.: 211203538}}
 \begin{document}
 \maketitle
 \tableofcontents
@@ -21,41 +21,43 @@
 		\begin{enumerate}
 		\item Speicherung der Studenten in separate Datensätze auf der Server-Seite. Enthaltene Informationen: Name, Matrikel-Nr., Geburtsdatum, Noten von n
 		Lehrveranstaltungen.
-		\item Es gibt m Gruppen von Studenten, die jeweils mehrere Studenten umfassen (m >= 3).
+		\item Es gibt m Gruppen von Studenten, die jeweils mehrere Studenten umfassen (m >= 3). In unserem Projekt symbolisiert eine Gruppe einen Studiengang.
 		\item Jede Gruppe repräsentiert einen Studiengang.
 		\item Die Datensätze jeder Gruppe werden in einer eigenen Datei gespeichert.
 		\item Gruppenbesten anhand des Durchschnitts ermitteln.
-		\item Mindestanforderungen: Mindestens drei Gruppen und in jeder: mindestens drei Studenten und jeder Studentendatei: mindestens drei Noten
+		\item Mindestanforderungen: Mindestens drei Gruppen und in jeder mindestens drei Studenten und jeder Studentendatei mindestens drei Noten
 		\item Die Datensätze der Studenten sollten zugreifbar sein.
 		\item Bester aller Studenten soll ermittelbar sein.
 		
 		\end{enumerate}
 	\subsection{Kommunikation zwischen Server und Client}
-		Für unser Projekt verwenden wir verbindungsorientierte Sockets. Es wird eine festbestehende Verbindung zwischen dem Client und Server aufgebaut. Mit diesem Hilfsmittel wird ein Datenaustausch ermöglicht, der erlaubt, dass Daten zwischeneinander versendet werden können.\\
-		Der theorethische Ablauf, wie die Kommunikation erfolgt ist wie folgt:
+		Für unser Projekt verwenden wir verbindungsorientierte Sockets. Es wird eine festbestehende Verbindung zwischen dem Client und Server aufgebaut. Mit diesem Hilfsmittel wird ein Datenaustausch ermöglicht, der erlaubt, dass Daten zwischen Server und Client versendet werden können.\\
+		Nachfolgend der theoretische Ablauf der Kommunikation:\\
+		
+		
 		\textbf{Client-seitig:}
 		\begin{enumerate}
 			\item Socket erstellen
-			\item erstellten Socket mit der Server-Adresse verbinden, von welcher Daten angefordert werden sollen
-			\item senden und empfangen von Daten
-			\item evtl. Socket herunterfahren (shutdown())
+			\item Erstellten Socket mit der Server-Adresse verbinden, von welcher Daten angefordert werden sollen
+			\item Senden und empfangen von Daten
+			\item Evtl. Socket herunterfahren (shutdown())
 			\item Verbindung trennen, Socket schließen
 		\end{enumerate}
 		
 		\textbf{Server-seitig:}
 		\begin{enumerate}
 			\item Server-Socket erstellen
-			\item binden des Sockets an eine Adresse (Port), über welche Anfragen akzeptiert werden
-			\item auf Anfragen warten
+			\item Binden des Sockets an eine Adresse (Port), über welche Anfragen akzeptiert werden
+			\item Auf Anfragen warten
 			\item Anfrage akzeptieren und damit ein neues Socket-Paar für diesen Client erstellen
-			\item bearbeiten der Client-Anfrage auf dem neuen Client-Socket
+			\item Bearbeiten der Client-Anfrage auf dem neuen Client-Socket
 			\item Client-Socket wieder schließen
 		\end{enumerate}
 
 \newpage
 
 	\subsection{Dateizugriff}
-		In unserm Projekt nutzen wir das CSV-Dateiformat um die Datensätze von Studenten auf eine praktische Art und Weise speichern und auslesen zu können. Um die Studenten ihrer zugehörigen Gruppen (Studiengängen) zuzuordnen, werden diese in Verzeichnissen abgelegt. \\
+		In unserm Projekt nutzen wir das CSV-Dateiformat um die Datensätze von Studenten auf eine praktische Art und Weise speichern und auslesen zu können. Um die Studenten ihrer zugehörigen Gruppe (Studiengang) zuzuordnen, werden diese in Verzeichnissen abgelegt. \\
 		Diese Verzeichnisse werden anhand ihrer Bennenungen unterschieden, z.B.: steht der Ordner ITTI für die Studenten, die der Informationstechnik / Technische Informatik angehören.\\
 		Generell werden Studenten in einer Datei gespeichert, die als Bezeichnung die zughörige Matrikelnummer besitzt. Innerhalb der Datei befinden sich die folgenden Datensätze, durch Simikolons von einander getrennt:\\
 		\begin{itemize}
@@ -71,14 +73,14 @@
 		 \\
 		113116119;mukitkarP;Max;Mustermann;Informatik;23.05.2013;1.0;1.3;2.7;5.0;1.0\\
 		 \\
-		Innerhalb des Programmes werden, bis auf die Noten, die Datensätze als Char-Arrays gespeichert. Wichtig ist es darauf zu achten, dass an letzter Stelle das Terminationszeichen ist. Das Passwort darf aus maximal 10 Zeichen bestehen. Für Vorname, Nachname und der zugehörige Studiengang sind 20+1 Char zur Verwendung unterstützt. Die Matrikelnummer besitzt 9 Stellen. Diese wird folglich in 9+1 Chars vom Client abgefragt. Ähnlich bei dem Geburtstag der in der Form DD.MM.YYYY in 11 Chars gespeichert wird. \\
-		Sowohl die einzelnen Noten, als auch die berechneten Durschnitte sind vom Datentyp Double. In die Datei werden die Noten als Chars der Länge 4 eingetragen, sodass sie immer die folgende Form besitzen X.Y wobei 1<X<5 und Y$\in \{$0,3,7$\}$ ist.\\
+		Innerhalb des Programmes werden, bis auf die Noten, die Datensätze als Char-Arrays gespeichert. Es ist darauf zu achten, dass an letzter Stelle das Terminationszeichen ist. Für Vorname, Nachname, Passwort und der zugehörige Studiengang sind 20+1 Char zur Verwendung unterstützt. Die Matrikelnummer besitzt 9 Stellen. Diese wird folglich in 9+1 Chars vom Client abgefragt. Ähnlich bei dem Geburtstag, der in der Form DD.MM.YYYY in 11 Chars gespeichert wird. \\
+		Die einzelnen Noten werden als Chars gespeichert, die berechneten Durschnitte sind vom Datentyp Double. In die Datei werden die Noten als Chars der Länge 4 eingetragen, sodass sie immer die folgende Form besitzen X.Y wobei 1<X<5 und Y$\in \{$0,3,7$\}$ ist. Bei der Eingabe einer Note wird überprüft, ob es eine gültige Eingabeform hat. Jedoch wird nicht geprüft, ob die Zahl selber sinnvoll ist. Das heißt das Vergeben einer 6.5 ist möglich.\\
 		
 
 \newpage
 		
-		\subsubsection{Beipieldatein}
-			Da zu Laufzeiten des Programms sowohl Gruppen als auch Studenten mit einer beliebigen Anzahl an Noten hinzugefügt werden, decken unsere Beispieldatein den geforderten Teil ab:
+		\subsubsection{Beipieldateien}
+			Da zu Laufzeiten des Programms sowohl Studiengänge als auch Studenten mit einer beliebigen Anzahl an Noten hinzugefügt werden, decken unsere Beispieldatein den geforderten Teil ab:
 			
 			\textbf{Studiengänge:}
 			\begin{itemize}
@@ -113,36 +115,39 @@
 		Dem Nutzer werden diese Möglichkeiten nach dem Login in einer Menüform zur Auswahl gestellt. Die Auswahl eines Menüpunktes erfragt auf Client-Seite, wenn nötig, Eingaben bzw. gibt die gewünschten Ergebnisse zurück.
 		\subsubsection{Administrator}
 			\begin{description}
-				\item[Student anlegen] Der Administrator muss bei dem Erstellen eines neuen Studenten dessen Vorname, Nachname, Geburtstag, Studiengang und Passwort angeben. Durch diese Eingabe wird eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt. Die Matrikelnummer wird einer Datei entnommen, die im Anschluss inkrementiert wird, um sicherzustellen, dass Matrikelnummern eindeutig bleiben.
-				\item[Student finden] Um die Daten eines Studenten einzusehen, wird Kentniss über seine Matrikelnummer vorrausgesetzt. Zusätzlich zu Matrikelnummer, Passwort, Vorname, Nachname, Studiengang, Geburtstag und aller Noten wird auch dessen Durschnitt angezeigt.
-				\item[Student editieren] Für die Editierung eines Studenten muss dessen Matrikelnummer angegeben werden. Danach ist es möglich sein Passwort oder eine Note gezielt zu ändern. 
-				\item[Studiengang anlegen] Durch diese Funktion wird ein neues Verzeichnis erstellt, in das später Studenten eingefügt werden können.
-				\item[Studiengangsmitglieder anzeigen] Nach der Eingabe des Studiengangs als Gruppennamen, werden alle Studenten aus diesem ausgegeben.
-				\item[Studiengänge anzeigen] Es werden alle vorhandenen Studiengänge ermittelt und ausgegeben.
-				\item[Note hinzufügen] Damit einem Studenten eine Note hinzugefügt werden kann müssen Matrikelnummer und die hinzuzufügende Note als Eingabe angegeben werden.
-				\item[Studiengangsbesten ermitteln] Für den ausgewählten Studiengang wird der beste Student anhand der einzelnen Durchschnitte ermittelt.
-				\item[Gesamtbesten ermitteln] Von allen Studenten, die gespeichert sind, wird der, mit dem besten Durchschnitt, ausgegeben.
-				\item[Beenden] Beendet die Kommunikation mit dem Server und schließt das Programm auf Seite des Clients.
+				\item[Student anlegen:] Der Administrator muss bei dem Erstellen eines neuen Studenten dessen Vorname, Nachname, Geburtstag, Studiengang und Passwort angeben. Der Studiengang muss vor dem Anlegen des Studenten vorhanden sein. Durch diese Eingabe wird eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt. Die Matrikelnummer wird einer Datei entnommen. Die Matrikelnummer in der Datei wird im Anschluss inkrementiert, um sicherzustellen, dass Matrikelnummern eindeutig bleiben. \\
+				Die Matrikelnummer entspricht außerdem der gefordertetn UserID.
+				\item[Student finden:] Um die Daten eines Studenten einzusehen, wird Kentnis über seine Matrikelnummer vorrausgesetzt. Zusätzlich zu Matrikelnummer, Passwort, Vorname, Nachname, Studiengang, Geburtstag und aller Noten wird auch dessen Durschnitt angezeigt. \\
+				Ist die Matrikelnummer unbekannt, so ist es möglich über $\glqq$Studiengangsmitglieder anzeigen$\grqq$ sich alle Matrikelnummern eines Studienganges ausgeben zu lassen.
+				\item[Student editieren:] Für die Editierung eines Studenten muss dessen Matrikelnummer angegeben werden. Danach ist es möglich sein Passwort oder eine Note gezielt zu ändern. Vor der Notenänderung werden diese aufgelistet und die zuverändernde kann dann ausgewählt werden.
+				\item[Studiengang anlegen:] Durch diese Funktion wird ein neuer Studiengang erstellt, in den später Studenten eingefügt werden können.
+				\item[Studiengangsmitglieder anzeigen:] Nach der Eingabe des Studiengangs, werden die Matrikelnummern aller Studenten aus diesem angezeigt.
+				\item[Studiengänge anzeigen:] Es werden alle vorhandenen Studiengänge ermittelt und ausgegeben.
+				\item[Note hinzufügen:] Damit einem Studenten eine Note hinzugefügt werden kann müssen Matrikelnummer und die hinzuzufügende Note eingegeben werden.
+				\item[Studiengangsbesten anzeigen:] Für den ausgewählten Studiengang wird der beste Student anhand der einzelnen Durchschnitte ermittelt.
+				\item[Gesamtbesten anzeigen:] Von allen Studenten, die gespeichert sind, wird der, mit dem besten Durchschnitt, ausgegeben. Im Falle, das es mehrere Beste gibt wird der zuerst Gefundene ausgegeben.
+				\item[Beenden:] Beendet die Kommunikation mit dem Server und schließt das Programm auf Seite des Clients. Der Server wartet nun auf neue Verbindungen und muss nicht neugestartet werden.
 			\end{description}
 			\subsubsection{Normale Nutzer}
+			Ein normaler Nutzer ist ein Student.
 			\begin{description}
-				\item[Daten anzeigen] Neben dem  Vornamen, Nachnamen, Studiengang, Passwort, Geburtstag und der Matrikelnummer wird der Durchschnitt ausgegeben.
-				\item[Beenden] Beendet die Kommunikation mit dem Server und schließt das Programm auf Seite des Clients.
+				\item[Daten anzeigen:] Neben dem  Vornamen, Nachnamen, Studiengang, Passwort, Geburtstag, Matrikelnummer  und den zugehörigen Noten wird der Durchschnitt ausgegeben.
+				\item[Beenden:] Beendet die Kommunikation mit dem Server und schließt das Programm auf Seite des Clients.
 			\end{description}
 	\subsection{Sicherheitsmechanismen}
 		\subsubsection{ACL}
-		ACL ist wie auch Capabilities eine Technik um den Zugriff der Benutzer auf Daten und Funktionen zu begrenzen. ACL implementiert diesen Mechanismus auf der Basis einer Zugriffssteuerungsliste d.h. für jeden Benutzer ist es möglich separat bestimmte Rechte wie die Erlaubnis zum Bearbeiten von Dateien zu gewähren oder auch so verweigern. Unter Linux wird dies durch die rechte Verteilung eines Benutzers, Gruppe und alle anderen Benutzer realisiert. Für jeder dieser Gruppe kann separat das Lesen(r), Schreiben(w) und Ausführen(x) zu setzen. Mit ls -l können diese Rechte eingesehen werden dabei stehen die Einträge 1-3 für die Rechte des Besitzers, 4-6 für die Gruppe und 7-9 für alle weiteren Benutzer. Bei einem Zugriff wird jeweils auf Basis der Identität die Berechtigung des Benutzers überprüft.
+		ACL ist wie auch Capabilities eine Technik um den Zugriff der Benutzer auf Daten und Funktionen zu begrenzen. ACL implementiert diesen Mechanismus auf der Basis einer Zugriffssteuerungsliste d.h. für jeden Benutzer ist es möglich separat bestimmte Rechte wie die Erlaubnis zum Bearbeiten von Dateien zu gewähren oder auch so verweigern. Unter Linux wird dies durch die Rechteverteilung eines Benutzers, einer Gruppe und alle anderen Benutzer realisiert. Für jeder dieser Gruppen können separat die Rechte für Lesen(r), Schreiben(w) und Ausführen(x) gesetzt werden. Mit ls -l können diese Rechte eingesehen werden. Dabei stehen die Einträge 1-3 für die Rechte des Besitzers, 4-6 für die Gruppe und 7-9 für alle weiteren Benutzer. Bei einem Zugriff wird jeweils auf Basis der Identität die Berechtigung des Benutzers überprüft.
 		\subsubsection{Capabilities}
-		Capabilities funktionieren analog zu dem Prinzip von ACL. Jedoch wird bei der Ausführung des Programmes überprüft auf welche Dateien das System zugreifen kann.
+		Capabilities funktionieren analog zu dem Prinzip von ACL. Jedoch wird bei der Ausführung des Programmes überprüft, auf welche Dateien das System zugreifen kann.
 		\subsubsection{Eigene Implementierung}
-		Unsere Implementierung des Sicherheitsmechanismus orientiert sich an der ACL. Unser System unterscheidet 2 Benutzergruppen Student und Admin. Der Admin hat die Möglichkeit neue Studenten(Dateien), Studiengänge usw. wie vorher beschrieben anzulegen und diese auch zu bearbeiten. Den Studenten ist diese Funktion verborgen und ist nur in der Lage die eigenen Daten abzufragen. Die Unterscheidung der Benutzergruppen geschieht beim Login in das System. Der Server reagiert nach einen erfolgreichen Login das er bereit ist Befehle entgegen zu nehmen. Je nach Benutzergruppe ist es möglich den Server entsprechende Befehle zu signalisieren worauf hin der Server mit der Bearbeitung beginnt d.h. die Unterscheidung findet nur im Client statt und die auszuführende Befehle werden durch Nachrichten von dem Server unterschieden.
+		Unsere Implementierung des Sicherheitsmechanismus orientiert sich an der ACL. Unser System unterscheidet 2 Benutzergruppen, Student und Admin. Der Admin hat die Möglichkeit neue Studenten(Dateien), Studiengänge usw., wie vorher beschrieben anzulegen und diese auch zu bearbeiten. Den Studenten sind diese Funktion verborgen und sie sind nur in der Lage die eigenen Daten abzufragen. Die Unterscheidung der Benutzergruppen geschieht beim Login in das System. Der Server reagiert nach einem erfolgreichen Login, dass er bereit ist Befehle entgegen zu nehmen. Je nach Benutzergruppe ist es möglich den Server entsprechende Befehle zu signalisieren, worauf hin der Server mit der Bearbeitung beginnt. Das heißt die Unterscheidung findet nur im Client statt und die auszuführenden Befehle werden durch entsprechende Nachrichten des Clients von dem Server unterschieden.
 		
 
 \newpage
 		
 \section{Praktische Umsetzung}
 	\subsection{Menü}
-		Die in Kapitel 2.4 Beschriebenen Funktionalitäten führen zu zwei unterschiedlichen Menü-Formen. Abhängig von den Rechten, die dem Nutzer nach dem Login zugeteilt werden, wird ein entsprechendes Menü angezeigt. \\
+		Die in Kapitel 2.4 beschriebenen Funktionalitäten führen zu zwei unterschiedlichen Menü-Formen. Abhängig von den Rechten, die dem Nutzer nach dem Login zugeteilt werden, wird ein entsprechendes Menü angezeigt. \\
 		
 		\textbf{Login:}\\
 		
@@ -156,39 +161,42 @@
 
 		\includegraphics[scale=1]{student.png}\\
 	\subsection{Client}
-		Der Client bietet dem Nutzer die Möglichkeit anhand eines Menüs Funktionen auszuwählen. Bei Auswahl werden gegebenenfalls Daten vom Nutzer angefordert und eine Mitteilung über das Ergebnis gegeben. Die Eingaben des Nutzers werden bis zu einem gewissen Grad validiert. Beispielsweise wird verhindert, dass bei der Eingabe Simikolons versendet werden können, da zusätzliche in CSV-Datein und deren Auswertung zu Fehlern führen werden.\\
+		Der Client bietet dem Nutzer die Möglichkeit anhand eines Menüs Funktionen auszuwählen. Bei Auswahl werden gegebenenfalls Daten vom Nutzer angefordert und eine Mitteilung über das Ergebnis gegeben. Die Eingaben des Nutzers werden bis zu einem gewissen Grad validiert. Beispielsweise wird verhindert, dass bei der Eingabe Simikolons verwendet werden können, da zusätzliche in CSV-Dateien und deren Auswertung zu Fehlern führen würden.\\
 		In unserem Programm ist es die Hauptaufgabe des Clients eine Schnittstelle zwischen Nutzer und Server darzustellen.
 	\subsection{Server}
-		Die Aufgabe des Servers ist es, auf die Befehle des Clients zu reagieren. Der Client sendet hierfür die Nummer der Option, die der Nutzer ausgewählt hat. Der Server empfängt diese und reagiert dem entsprechend. Eine große Rolle spielt der Dateizugriff auf Server Seite, da dieser hauptsächlich Dateien schreibt oder ausliest. Anschließend werden die Informationen aufbereitet und an den Client übermittelt. Wie in unserem Projekt dieser Umgang mit Dateien ermöglicht wird, ist wie folgt:
+		Die Aufgabe des Servers ist es, auf die Befehle des Clients zu reagieren. Der Client sendet hierfür die Nummer der Option, die der Nutzer ausgewählt hat. Der Server empfängt diese und reagiert dementsprechend. Eine große Rolle spielt der Dateizugriff auf Server Seite, da dieser hauptsächlich Dateien schreibt oder ausliest. Anschließend werden die Informationen aufbereitet und an den Client übermittelt. Wie in unserem Projekt dieser Umgang mit Dateien ermöglicht wird, ist wie folgt:
 		\subsubsection{Dateien auslesen}
-			Da Studiengänge durch Verzeichnisse umgestezt werden, ist es elementar notwendig diese Ordner zu öffnen, um Zugriff auf eine spezielle Studentendatei zu erhalten. Danach wird die Datei vollständig ausgelesen und innerhalb des Programmes zur weiteren Bearbeitung hinterlegt. Die Daten über den Studenten befinden sich jetzt in einem String gespeichert, wobei die Datensätze durch Simikolons getrennt sind. Es ist nun nötig den String aufzugliedern und die benötigten Daten zu extrahieren. Die ermittelten Daten stehen daraufhin zur weiteren Verarbeitung zur Verfügung.
+			Da Studiengänge durch Verzeichnisse umgestezt werden, ist es elementar notwendig diese Ordner zu öffnen, um Zugriff auf eine spezielle Studentendatei zu erhalten. Danach wird die Datei vollständig ausgelesen und innerhalb des Programmes zur weiteren Bearbeitung hinterlegt.\\
+			Die Daten über den Studenten befinden sich jetzt in einem String gespeichert, wobei die Datensätze durch Simikolons getrennt sind. Es ist nun nötig den String aufzugliedern und die benötigten Daten zu extrahieren. Die ermittelten Daten stehen daraufhin zur weiteren Verarbeitung zur Verfügung.
 			\begin{description}
-				\item[Verzeichnissinhaltsausgabe] wird durch die Funktion opendir() ermöglicht. Der Server erhält den Namen des Verzeichnisses, das geöffnet werden soll und nutzt dafür opendir(). Als Rückgabe erhalten wir einen Pointer, der auf den ersten Eintrag zeigt. Bestimmte Datein, die keine Studenten repräsentieren werden ignoriert. Alle anderen werden nacheinander ausgegeben. Realisiert wird dies in der Funktion findGroup(). An den Server werden die Studenten übermittelt und dort ausgegeben.
-				\item[Verzeichnisse öffnen] ist durch chdir() möglich. Der Client übermittelt dem Server welches Verzeichnis geöffnet werden soll. Sollte das öffnen nicht möglich sein, wird dies dem Client umgehend mitgeteilt, die Funktion wird beendet und der Client bekommt die Möglichkeit im Hauptmenü einen neuen Vorgang zu starten. Ist es jedoch möglich gewesen in ein Verzeichnis zu wechseln, kann nun auf alle Dateien innerhalb dieses zugegriffen werden. Wichtig ist, dass im Anschluss daran wieder in das darüberliegende Verzeichniss zurück gewechselt wird. Andernfalls kann es zu Fehlern kommen, da entsprechende andere Studiengänge sich nicht in dem vorher ausgewählten befinden.
+				\item[Verzeichnisinhaltsausgabe] wird durch die Funktion opendir() ermöglicht. Der Server erhält den Namen des Verzeichnisses, das geöffnet werden soll und nutzt dafür opendir(). Als Rückgabe erhalten wir einen Pointer, der auf den ersten Eintrag zeigt. Dateien, die keine Studenten sind, werden ignoriert. Alle anderen werden nacheinander ausgegeben. Realisiert wird dies in der Funktion findGroup(). An den Server werden die Studenten übermittelt und dort ausgegeben.
+				\item[Verzeichnisse öffnen] ist durch chdir() möglich. Der Client übermittelt dem Server welches Verzeichnis geöffnet werden soll. Sollte das öffnen nicht möglich sein, wird dies dem Client umgehend mitgeteilt, die Funktion wird beendet und der Client bekommt die Möglichkeit im Hauptmenü einen neuen Vorgang zu starten. Ist es jedoch möglich gewesen in ein Verzeichnis zu wechseln, kann nun auf alle Dateien innerhalb dieses zugegriffen werden. Wichtig ist, dass im Anschluss daran wieder in das darüberliegende Verzeichniss zurück gewechselt wird. Andernfalls kann es zu Fehlern kommen, da entsprechende andere Studiengänge sich nicht in dem vorher ausgewählten befinden.\\
+				Generell können Verzeichnisse nur vom Server geöffnet werden, jedoch nicht vom Client aus.
 				\item[Dateien auslesen] wird durch fscanf(Quelle,Formatierung,Ziel) umgesetzt.
 				\item[String aufteilen] realiseren wir mit  strtok(Quellstring, delimiters);. Mit strtok kann ein String anhand von Trennzeichen zerteilt und die einzelnen Abschnitte herausgelesen werden. Die Trennzeichen werden im Parameter delimiter (Begrenzungszeichen, Separator) übergeben - in unserem Fall das Simikolon. Die einzelnen Datensegmente werden in einen anderen String gespeichert, der in Abschnitte unterteilt ist. \\
 				\textbf{FABIENNE HIER BITTE NOCHMAL GRÜNDLICH NACHLESEN!!!}
 			\end{description}
-		\subsubsection{Dateien schreiben}	
-			Das schreiben und damit das Anlegen neuer Dateien spielt beim Hinzufügen neuer Studenten bzw. dem Hinzufügen einzelner Noten eine Rolle. Um einen Studenten zu erstellen, muss der ausgewählte Studiengang als aktuelles Verzeichniss gewählt werden. Wenn ein neuer Student angelegt werden soll, werden zuerst noch verschiedene Fehlerfehle abgefangen: Beispielsweise falsches Verzeichnis, Fehler bei Vergabe der Matrikelnummer, etc. \\
-			Kam es zu keinen Fehlern wird mit fopen() eine Datei erstellt. Durch fprintf(NeueDatei, Formatierungsstring, MatrikelNummer, Daten) wird in Datei geschrieben. Abschließend wird die Datei geschlossen und wieder in das nächst höhere Verzeichniss zurückgewechselt.
+		\subsubsection{Dateien Schreiben}	
+			Das schreiben und damit das Anlegen neuer Dateien spielt beim Hinzufügen neuer Studenten eine Rolle. Bei dem Hinzufügen einzelner Noten wird keine neue Datei erstellt, sondern eine existierende bearbeitet. Um einen Studenten zu erstellen, muss der ausgewählte Studiengang als aktuelles Verzeichniss gewählt werden. Wenn ein neuer Student angelegt werden soll, werden zuerst noch verschiedene Fehlerfehle abgefangen: Beispielsweise falsches Verzeichnis, Fehler bei Vergabe der Matrikelnummer, etc. \\
+			Kam es zu keinen Fehlern wird mit fopen() eine Datei erstellt. Durch fprintf(NeueDatei, Formatierungsstring, MatrikelNummer, Daten) wird in die Datei geschrieben. Abschließend wird die Datei geschlossen und wieder in das nächst höhere Verzeichniss zurückgewechselt.
 		\subsubsection{Sonstige Funktionen}
 			Bisher nicht genauer spezifizierte Funktionen werden mit den gleichen Methoden, wie vorangehend beschrieben, umgesetzt. Ziel und Zweck dieser Funtkionalitäten sind im Nutzerhandbuch beschrieben.
 \section{Nutzerhandbuch}
 	\subsection{Inbetriebnahme}
-		Als Betriebssystem wird eine Linux Distribution vorrausgesetzt. Um das C Programm zu kompilieren, führt der Nutzer im Terminal $\glqq$make install$\grqq$ aus. Wichtig ist, dass er sich im richtigen Verzeichnis befindet - in dem sich auch das Skrip $\glqq$makefile$\grqq$ befindet. In zwei verschiedenen Terminals werden nun die ausführbaren Datein gestartet.\\
+		Als Betriebssystem wird eine Linux Distribution vorrausgesetzt. Um das C Programm zu kompilieren, führt der Nutzer im Terminal $\glqq$make install$\grqq$ aus. Wichtig ist, dass er sich im richtigen Verzeichnis befindet - in dem sich auch das Skrip $\glqq$makefile$\grqq$ befindet. In zwei verschiedenen Terminals werden nun die ausführbaren Dateien gestartet.\\
 		In Terminal 1 wird durch $\glqq$./servern$\grqq$ der Server gestartet.\\
 		Den Client startet der Nutzer in dem Terminal 2, durch die Eingabe von $\glqq$./clientn 127.0.0.1$\grqq$.
 	\subsection{Server}
-		Auf Seiten der Servers werden keine Eigaben oder Interaktionen zur Verfügung gestellt. Es werden gegebenenfalls Rückmeldungen ausgegeben, wenn der Client mit dem Server interagiert. Die Dateipflege kann neben dem Client-Interface auch manuell gehandhabt werden: Ordner als Studiengang hinzufügen, neue Dateien als Studenten anlegen oder Dateien öffnen und bearbeiten. Bei Einhaltung der oben genannten Spezifikationen kommt es dadurch zu keinen Fehlern.
+		Auf Seiten der Servers werden keine Eingaben oder Interaktionen zur Verfügung gestellt. Es werden gegebenenfalls Rückmeldungen ausgegeben, wenn der Client mit dem Server interagiert. Die Dateipflege kann neben dem Client-Interface auch manuell gehandhabt werden: Ordner als Studiengang hinzufügen, neue Dateien als Studenten anlegen oder Dateien öffnen und bearbeiten. Bei Einhaltung der oben genannten Spezifikationen kommt es dadurch zu keinen Fehlern.
 	\subsection{Client}
 		Bei Nutzung des Clients im Terminal 2 führt das Programm den Nutzer durch eine intutive Menüführung. Zurück zu dem Hauptmenü kann der Nutzer jeder Zeit durch die Eingabe einer 0 gelangen.
 		\subsubsection{Login}
 			Nach Starten des Servers werden der Nutzername und das zugehörige Passwort abgefragt. Authentifiziert werden die Studenten durch ihre Matrikelnummer und das zugehörige Passwort. \\
 			Die Administratoren besitzten den Nutzernamen $\glqq$admin$\grqq$ und das Passwort $\glqq$123$\grqq$.
-		\subsubsection{Studenten anlegen}
-			Einen neuen Studen anlegen ist nur für Administratoren möglich. Dieser wird aufgefordert stückchenweise dei Stammdaten des Studenten einzugeben: Vorname, Nachname, Geburtstag, Studiengang und Passwort.\\
-			Hierbei wird der Ersteller auf die maximale Länge der Eingabe hingewiesen. Nachdem alle Daten eingeben wurden müssen die Daten noch mit einer $\glqq$1$\grqq$ bestätigt werden. Hiernach wird durch diese Eingabe  eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt.
+		\subsubsection{Student anlegen}
+			Einen neuen Studen anlegen ist nur für Administratoren möglich. Dieser wird aufgefordert, stückchenweise die Stammdaten des Studenten einzugeben: Vorname, Nachname, Geburtstag, Studiengang und Passwort.\\
+			Hierbei wird der Ersteller auf die maximale Länge der Eingabe hingewiesen. Nachdem alle Daten eingeben wurden, müssen die Daten noch mit einer $\glqq$1$\grqq$ bestätigt werden.\\
+			Hiernach wird durch diese Eingabe  eine Datei mit der Matrikelnummer als Name und im passenden Ordner (dem Studiengang) angelegt.
 		\subsubsection{Student finden / Daten anzeigen}
 			Je nachdem wer diese Funktion aufruft ereignen sich unterschiedliche Interaktionen. \\
 			Wenn jemand mit Administrator-Rechten sich Studentendaten anzeigen lassen möchte, wird er gefragt welche Matrikelnummer dieser besitzt.\\
@@ -205,7 +213,7 @@
 		\subsubsection{Note hinzufügen}
 			Für ein Software-Projekt, wie dieses, ist es sinnvoll, dass Studenten weitere Noten hinzugefügt werden können. Damit nicht jeder Student sich selbst Noten geben kann, ist dies nur vom Administrator aus möglich. Hierfür muss die Matrikelnummer des Studenten angegeben werden. Dazu kommt naheliegender Weise auch die Note die dem Studenten zugedacht ist. Nach einer Bestätigung wird nun in der Studentendatei hinten die Note angefügt.
 		\subsubsection{Studiengangsbesten anzeigen}
-			Diese Funktionalität ist ebenfalls den Administratoren vorbehalten. Es wird aus jedem Studiengang der Beste ermittelt. Dafür werden von allen Studenten die Durchschnitte gebildet und miteinander verglichen. Studenten wird nicht die Möglichkeit gegeben ihren Durchschnitt mit anderen zu vergleich. Diese Funktion bleibt Administratoren vorbehalten.
+			Diese Funktionalität ist ebenfalls den Administratoren vorbehalten. Es wird aus dem angegebenen Studiengang der Beste ermittelt. Dafür werden von allen Studenten die Durchschnitte gebildet und miteinander verglichen. Studenten wird nicht die Möglichkeit gegeben ihren Durchschnitt mit anderen zu vergleichen. Diese Funktion bleibt Administratoren vorbehalten.
 		\subsubsection{Gesamtbesten anzeigen}
 			Ähnlich wie bei dem Studiengangsbesten werden auch hier Studenten verglichen. Um den Gesamtbesten zu ermitteln werden die Studiengangsbesten anhand ihrer Durchschnitte verglichen. Nur Administratoren können den Besten ermitteln.
 		\subsubsection{Beenden}
