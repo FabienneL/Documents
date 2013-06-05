@@ -12,7 +12,7 @@
 \tableofcontents
 
 \section{Problem}
-	Ziel des Projektes war es, zu lernen, wie Dateien mit Hilfe von Client/Server Stream Socket Programmierung (mit TCP/IP Sockets) angelegt und verwaltet werden können. Das wie folgt beschriebene Grundsystem wurde von uns mit einem Datei-Zugriffsschutz erweitert. 
+	Ziel des Projektes war es, zu lernen, wsie Dateien mit Hilfe von Client/Server Stream Socket Programmierung (mit TCP/IP Sockets) angelegt und verwaltet werden können. Das wie folgt beschriebene Grundsystem wurde von uns mit einem Datei-Zugriffsschutz erweitert. 
 	Unsere Gruppe hat sich für Option b) entschieden: den Datei-Zugriffsschutz. Hierbei wird zwischen normalen Nutzern und Administratoren unterschieden, die sich durch verschiedene Rechte auszeichnen. Nach einem Login, der zum einen die Gültigkeit prüft, werden an dieser Stelle auch die Rechte ermittelt. Durch die Rechteverteilung werden dem Nutzer auf Clientseite verschiedene Funktionen zur Auswahl gestellt.\\
 
 \section{Vorbetrachtung - Theorie}
@@ -69,12 +69,12 @@
 			\item Geburtstag
 			\item eine beliebiege Anzahl an Noten
 		\end{itemize}
-		Der Datensatz eines Beispielstudenten sieht folgender Maßen aus:\\
+		Der Datensatz eines Beispielstudenten sieht folgendermaßen aus:\\
 		 \\
 		113116119;mukitkarP;Max;Mustermann;Informatik;23.05.2013;1.0;1.3;2.7;5.0;1.0\\
 		 \\
-		Innerhalb des Programmes werden, bis auf die Noten, die Datensätze als Char-Arrays gespeichert. Es ist darauf zu achten, dass an letzter Stelle das Terminationszeichen ist. Für Vorname, Nachname, Passwort und der zugehörige Studiengang sind 20+1 Char zur Verwendung unterstützt. Die Matrikelnummer besitzt 9 Stellen. Diese wird folglich in 9+1 Chars vom Client abgefragt. Ähnlich bei dem Geburtstag, der in der Form DD.MM.YYYY in 11 Chars gespeichert wird. \\
-		Die einzelnen Noten werden als Chars gespeichert, die berechneten Durschnitte sind vom Datentyp Double. In die Datei werden die Noten als Chars der Länge 4 eingetragen, sodass sie immer die folgende Form besitzen X.Y wobei 1<X<5 und Y$\in \{$0,3,7$\}$ ist. Bei der Eingabe einer Note wird überprüft, ob es eine gültige Eingabeform hat. Jedoch wird nicht geprüft, ob die Zahl selber sinnvoll ist. Das heißt das Vergeben einer 6.5 ist möglich.\\
+		Innerhalb des Programmes werden, bis auf die Noten, die Datensätze als Char-Arrays gespeichert. Für Vorname, Nachname, Passwort und der zugehörige Studiengang sind 20 Char zur Verwendung unterstützt. Die Matrikelnummer besitzt 9 Stellen. Diese wird folglich in 9 Chars vom Client abgefragt. Ähnlich bei dem Geburtstag, der in der Form DD.MM.YYYY in 10 Chars gespeichert wird. \\
+		Die einzelnen Noten werden als Chars gespeichert, die berechneten Durschnitte sind vom Datentyp Double. In die Datei werden die Noten als Chars der Länge 3 eingetragen, sodass sie immer die folgende Form besitzen X.Y wobei 1<X<5 und Y$\in \{$0,3,7$\}$ ist. Bei der Eingabe einer Note wird überprüft, ob es eine gültige Eingabeform hat. Jedoch wird nicht geprüft, ob die Zahl selber sinnvoll ist. Das heißt das Vergeben einer 6.5 ist möglich.\\
 		
 
 \newpage
@@ -147,19 +147,18 @@
 		
 \section{Praktische Umsetzung}
 	\subsection{Menü}
-		Die in Kapitel 2.4 beschriebenen Funktionalitäten führen zu zwei unterschiedlichen Menü-Formen. Abhängig von den Rechten, die dem Nutzer nach dem Login zugeteilt werden, wird ein entsprechendes Menü angezeigt. \\
+		Die in Kapitel 2.4 beschriebenen Funktionalitäten führen zu zwei unterschiedlichen Menü-Formen. Abhängig von den Rechten, die dem Nutzer nach dem Login zugeteilt werden, wird ein entsprechendes Menü angezeigt. Hier zwei beispielhafte Login-Anzeigen mit anschließender Menüführung:\\
 		
-		\textbf{Login:}\\
-		
-		\includegraphics[scale=0.6]{Login.jpg}\\
-
 		\textbf{Administrator-Ansicht:}\\
 
+		\includegraphics[scale=1]{adminLogin.png}\\
+		 \\
 		\includegraphics[scale=1]{admin.png}\\
 
 		\textbf{Studenten-Ansicht:}\\
 
-		\includegraphics[scale=1]{student.png}\\
+		\includegraphics[scale=1]{studentLogin.png}
+		\includegraphics[scale=1]{student.png}\\		
 	\subsection{Client}
 		Der Client bietet dem Nutzer die Möglichkeit anhand eines Menüs Funktionen auszuwählen. Bei Auswahl werden gegebenenfalls Daten vom Nutzer angefordert und eine Mitteilung über das Ergebnis gegeben. Die Eingaben des Nutzers werden bis zu einem gewissen Grad validiert. Beispielsweise wird verhindert, dass bei der Eingabe Simikolons verwendet werden können, da zusätzliche in CSV-Dateien und deren Auswertung zu Fehlern führen würden.\\
 		In unserem Programm ist es die Hauptaufgabe des Clients eine Schnittstelle zwischen Nutzer und Server darzustellen.
@@ -174,7 +173,6 @@
 				Generell können Verzeichnisse nur vom Server geöffnet werden, jedoch nicht vom Client aus.
 				\item[Dateien auslesen] wird durch fscanf(Quelle,Formatierung,Ziel) umgesetzt.
 				\item[String aufteilen] realiseren wir mit  strtok(Quellstring, delimiters);. Mit strtok kann ein String anhand von Trennzeichen zerteilt und die einzelnen Abschnitte herausgelesen werden. Die Trennzeichen werden im Parameter delimiter (Begrenzungszeichen, Separator) übergeben - in unserem Fall das Simikolon. Die einzelnen Datensegmente werden in einen anderen String gespeichert, der in Abschnitte unterteilt ist. \\
-				\textbf{FABIENNE HIER BITTE NOCHMAL GRÜNDLICH NACHLESEN!!!}
 			\end{description}
 		\subsubsection{Dateien Schreiben}	
 			Das schreiben und damit das Anlegen neuer Dateien spielt beim Hinzufügen neuer Studenten eine Rolle. Bei dem Hinzufügen einzelner Noten wird keine neue Datei erstellt, sondern eine existierende bearbeitet. Um einen Studenten zu erstellen, muss der ausgewählte Studiengang als aktuelles Verzeichniss gewählt werden. Wenn ein neuer Student angelegt werden soll, werden zuerst noch verschiedene Fehlerfehle abgefangen: Beispielsweise falsches Verzeichnis, Fehler bei Vergabe der Matrikelnummer, etc. \\
